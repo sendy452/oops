@@ -1,12 +1,14 @@
 <?php
 require_once 'Tables.php';
+require_once 'Fields.php';
 
 class DBScanner
 {
-    var $tab;
+    var $tb;
 
-    function __construct(){
-       $this->tab = new iTables();
+    public function __construct()
+    {
+        $this->tb = new iTables();
     }
 
     public function ScanMySql($ip, $username, $password, $dbname)
@@ -15,12 +17,13 @@ class DBScanner
 
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
+        } else {
+            return $conn;
         }
-        echo "Connected successfully on DB: " . $dbname;
     }
 
     public function Tables()
     {
-        return $this->tab;
+        return $this->tb;
     }
 }

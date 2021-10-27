@@ -21,10 +21,4 @@ class Table{
     {
         return $this->isView;
     }
-
-
-    public function getsetData()
-{
-    # code...
-}
 }
