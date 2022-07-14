@@ -34,12 +34,8 @@ class DBScanner
                                 WHERE TABLE_SCHEMA = '$dbname' AND TABLE_NAME = '$tb_name'")
             );
             $isViewRow[0] == 'VIEW' ? $isView = true : $isView = false;
-            $tablelist = array(
-                'tableName' => $tb_name,
-                'isView' => $isView
-            );
 
-            $status = $this->tb->addTable($tablelist);
+            $status = $this->tb->addTable($tb_name, $isView);
             $this->addAllField($conn, $dbname, $tb_name);
         }
 
@@ -57,14 +53,8 @@ class DBScanner
                 $dataLength = !empty($row['CHARACTER_MAXIMUM_LENGTH']) ? $row['CHARACTER_MAXIMUM_LENGTH'] : $row['NUMERIC_PRECISION'];
                 $isPK = $row['COLUMN_KEY'] == 'PRI' ? true : false;
                 $isNull = $row['IS_NULLABLE'] == 'YES' ? true : false;
-                $obj = array(
-                    'fieldName' => $fieldName,
-                    'dataType' => $dataType,
-                    'dataLength' => $dataLength,
-                    'isPK' => $isPK,
-                    'isNull' => $isNull
-                );
-                $this->tb->table($tb_name)->fields()->addField($obj);
+                
+                $this->tb->table()->fields()->addField($fieldName, $dataType, $dataLength, $isPK, $isNull);
             }
 
             return $this;

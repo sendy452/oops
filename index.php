@@ -5,48 +5,91 @@ $db = new DBScanner();
 
 $conn = $db->ScanMySql("localhost", "root", "", "bioskop");
 
-$listtable = array(
-    'tableName' => 'Coba',
-    'isView' => true,
-);
-$db->Tables()->AddTable($listtable);
+?>
 
-echo "<h1>GetTable</h1>";
-print_r($db->Tables()->GetTable());
+<html>
+<head>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 10px;
+}
+</style>
+</head>
+<body>
+<table>
+    <tr>
+        <td colspan="2"><h1>GetTable by Index</h1></td>
+    </tr>
+    <?php 
+    print_r($db->Tables()->GetTablebyIndex("film")); 
+    ?>
+</table>
+<br><br>
+<table>
+    <tr>
+        <td colspan="2"><h1>GetTable</h1></td>
+    </tr>
+    <?php 
+    //AddTable
+    $db->Tables()->AddTable('Coba', true);
+    print_r($db->Tables()->GetTable()); 
+    ?>
+    <tr>
+        <td><b>Total Count:</b></td>
+        <td><?php print_r($db->Tables()->Count()); ?></td>
+    </tr>
+</table>
+<br><br>
+<table>
+    <td colspan="2"><h1>Delete</h1></td>
+    <?php
+    $db->Tables()->DeleteTable("Coba");
+    print_r($db->Tables()->GetTable());
+    ?>
+    <tr>
+        <td><b>Total Count:</b></td>
+        <td><?php print_r($db->Tables()->Count());?></td>
+    </tr>
+</table>
 
-echo "<h1>Count</h1>";
-print_r($db->Tables()->Count());
-
-echo "<h1>Delete</h1>";
-$db->Tables()->DeleteTable("Coba");
-
-print_r($db->Tables()->GetTable());
-print_r("After Delete: ".$db->Tables()->Count());
-
-
-echo "<h1>GetField</h1>";
+<br><br>
+<?php 
 //AddField
 $tb = $db->Tables()->table("Coba");
-$fieldName = 'test_field';
-$dataType = 'varchar';
-$dataLength = '255';
-$isPK = false;
-$isNull = true;
-$obj = array(
-    'fieldName' => $fieldName,
-    'dataType' => $dataType,
-    'dataLength' => $dataLength,
-    'isPK' => $isPK,
-    'isNull' => $isNull
-);
-$tb->Fields()->AddField($obj);
-print_r($tb->Fields()->GetField());
+$tb->Fields()->AddField('test_field', 'varchar', 255, false, true);
+?>
+<table>
+    <tr>
+        <td colspan="5"><h1>GetField by Index</h1></td>
+    </tr>
+    <?php 
+    print_r($tb->Fields()->GetFieldbyIndex(0)); 
+    ?>
+</table>
+<br><br>
 
-echo "<h1>Count</h1>";
-print_r($tb->Fields()->Count());
+<table>
+    <td colspan="5"><h1>GetField</h1></td>
+    <?php print_r($tb->Fields()->GetField());?>
+    <tr>
+        <td><b>Total Count:</b></td>
+        <td colspan="4"><?php print_r($tb->Fields()->Count());?></td>
+    </tr>
+</table>
 
-echo "<h1>Delete</h1>";
-$tb->Fields()->DeleteField($fieldName);
-
-print_r($tb->Fields()->GetField());
-print_r("After Delete: ".$tb->Fields()->Count());
+<?php
+$tb->Fields()->DeleteField("test_field");
+?>
+<br><br>
+<table>
+    <td colspan="5"><h1>Delete</h1></td>
+    <?php print_r($tb->Fields()->GetField());?>
+    <tr>
+        <td><b>Total Count:</b></td>
+        <td colspan="4"><?php print_r($tb->Fields()->Count());?></td>
+    </tr>
+</table>
+</body>
+</html>

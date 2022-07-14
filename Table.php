@@ -36,4 +36,23 @@ class Table{
     {
         return $this->fd;
     }
+
+    // show table
+    public function show()
+    {
+        return "
+        <table>
+            <tr>
+                <th>No</th>
+                <th>tableName</th>
+                <th>isView</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>$this->tableName</td>
+                <td>$this->isView</td>
+            </tr>
+        </table>
+        ";
+    }
 }

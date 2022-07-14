@@ -13,27 +13,71 @@ class iTables
         $this->tb = new Table();
     }
 
-    public function AddTable($tablelist)
+    public function AddTable($TbName, $isView)
     {
-        $key = $tablelist['tableName'];
-        $this->arrTb[$key] = array(
-           'tableName' => $tablelist['tableName'],
-            'isView' => $tablelist['isView'] ? 'true' : 'false',
-        );
-        $this->tb->setTableName('tableName');
-        $this->tb->setIsView('isView');
+        $table = new Table();
+        $table->setTableName($TbName);
+        $table->setIsView($isView ? 'true' : 'false');
+
+        $this->arrTb[] = $table;
+        return $this;
     }
 
     public function GetTable()
     {
         $string = '';
         foreach ($this->arrTb as $row) {
-            $tableName = $row[$this->tb->getTableName()];
-            $isView = $row[$this->tb->getIsView()];
+            $TbName = $row->getTableName();
+            $isView = $row->getIsView();
 
-            $string .= "tableName : $tableName <br> isView : $isView<br><br>";
+            $string .= "
+            <tr>
+                <td>$TbName </td>
+                <td>$isView</td>
+            </tr>";
         }
-        return $string;
+        return "
+        <tr>
+            <th>Nama Tabel</th>
+            <th>Is View</th>
+        </tr>" 
+        . $string;
+    }
+
+    public function GetTablebyIndex($key)
+    {
+        if (filter_var($key, FILTER_VALIDATE_INT) === false) {
+            for ($x = 0; $x < sizeof($this->arrTb); $x++) {
+                if ($this->arrTb[$x]->getTableName() == $key) {
+                    return "
+                        <tr>
+                            <th>tableName</th>
+                            <th>isView</th>
+                        </tr>
+                        <tr>
+                            <td>".$this->arrTb[$x]->tableName."</td>
+                            <td>".$this->arrTb[$x]->isView."</td>
+                        </tr>
+                    ";
+                }
+            }
+            return "Tabel '$key' tidak ditemukan";
+        } else {
+            if (isset($this->arrTb[$key])) {
+                return "
+                <tr>
+                    <th>tableName</th>
+                    <th>isView</th>
+                </tr>
+                <tr>
+                    <td>".$this->arrTb[$key]->tableName."</td>
+                    <td>".$this->arrTb[$key]->isView."</td>
+                </tr>
+            ";
+            } else {
+                return "Index Tabel ke-'$key' tidak ada";
+            }
+        }
     }
 
     public function Count()
@@ -43,7 +87,19 @@ class iTables
 
     public function DeleteTable($tablerm)
     {
-        unset($this->arrTb[$tablerm]);
+        if (filter_var($tablerm, FILTER_VALIDATE_INT) === false) {
+            for ($x = 0; $x < sizeof($this->arrTb); $x++) {
+                if ($this->arrTb[$x]->getTableName() == $tablerm) {
+                    unset($this->arrTb[$x]);
+                    return $this;
+                }
+            }
+        } else {
+            if (isset($this->arrTb[$tablerm])) {
+                unset($this->arrTb[$tablerm]);
+                return $this;
+            }
+        }
     }
     public function table()
     {
